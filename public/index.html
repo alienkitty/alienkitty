@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>AlienKitty – Future web</title>
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://alienkitty.com/">
+    <meta property="og:site_name" content="AlienKitty">
+    <meta property="og:title" content="Future web">
+    <meta property="og:image" content="https://alienkitty.com/assets/meta/share.png">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@pschroen">
+    <meta name="twitter:creator" content="@pschroen">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div id="root"></div>
+    <script type="module">
+        import { Preloader } from './assets/js/loader.js';
+
+        Preloader.init();
+    </script>
+    <script>
+        try {
+            eval('(async () => {try {await import(\'foo\');} catch (e) {}})();');
+        } catch (e) {
+            location.href = 'unsupported.html';
+        }
+    </script>
+</body>
+</html>
