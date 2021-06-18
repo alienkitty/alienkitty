@@ -6,6 +6,8 @@ export class Config {
 
     static ASSETS = [
         'assets/images/alienkitty.svg',
-        'assets/images/alienkitty_eyelid.svg'
+        'assets/images/alienkitty_eyelid.svg',
+        'assets/fonts/Roboto-Bold.png',
+        'assets/fonts/Roboto-Bold.json'
     ];
 }
