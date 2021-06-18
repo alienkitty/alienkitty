@@ -1,6 +1,7 @@
 import { Raycaster, Vector2 } from 'three';
 
-import { Device, Stage } from 'alien.js';
+import { Device } from '../../config/Device.js';
+import { Stage } from '../Stage.js';
 
 export class InputManager {
     static init(camera) {
@@ -24,26 +25,27 @@ export class InputManager {
     }
 
     static addListeners() {
-        Stage.element.addEventListener('touchstart', this.onTouchStart);
-        Stage.element.addEventListener('mousedown', this.onTouchStart);
-        window.addEventListener('touchmove', this.onTouchMove);
-        window.addEventListener('mousemove', this.onTouchMove);
-        window.addEventListener('touchend', this.onTouchEnd);
-        window.addEventListener('mouseup', this.onTouchEnd);
+        Stage.element.addEventListener('pointerdown', this.onPointerDown);
+        window.addEventListener('pointermove', this.onPointerMove);
+        window.addEventListener('pointerup', this.onPointerUp);
+    }
+
+    static removeListeners() {
+        Stage.element.removeEventListener('pointerdown', this.onPointerDown);
+        window.removeEventListener('pointermove', this.onPointerMove);
+        window.removeEventListener('pointerup', this.onPointerUp);
     }
 
     /**
      * Event handlers
      */
 
-    static onTouchStart = e => {
-        e.preventDefault();
-
+    static onPointerDown = e => {
         if (!this.enabled) {
             return;
         }
 
-        this.onTouchMove(e);
+        this.onPointerMove(e);
 
         if (this.hover) {
             this.click = this.hover;
@@ -52,7 +54,7 @@ export class InputManager {
         }
     };
 
-    static onTouchMove = e => {
+    static onPointerMove = e => {
         if (!this.enabled) {
             return;
         }
@@ -92,26 +94,24 @@ export class InputManager {
         } else if (this.hover) {
             this.hover.onHover({ type: 'out' });
             this.hover = null;
-            Stage.css({ clearProps: 'cursor' });
+            Stage.css({ cursor: '' });
         }
     };
 
-    static onTouchEnd = e => {
-        if (!this.enabled) {
+    static onPointerUp = e => {
+        if (!this.enabled || !this.click) {
             return;
         }
 
-        this.onTouchMove(e);
+        this.onPointerMove(e);
 
-        if (this.click) {
-            if (performance.now() - this.lastTime > 750 || this.delta.subVectors(this.mouse, this.lastMouse).length() > 50) {
-                this.click = null;
-                return;
-            }
+        if (performance.now() - this.lastTime > 750 || this.delta.subVectors(this.mouse, this.lastMouse).length() > 50) {
+            this.click = null;
+            return;
+        }
 
-            if (this.click === this.hover) {
-                this.click.onClick();
-            }
+        if (this.click === this.hover) {
+            this.click.onClick();
         }
 
         this.click = null;
@@ -123,7 +123,7 @@ export class InputManager {
 
     static update = time => {
         if (!Device.mobile && time - this.lastRaycast > this.raycastInterval) {
-            this.onTouchMove();
+            this.onPointerMove();
             this.lastRaycast = time;
         }
     };
@@ -137,7 +137,7 @@ export class InputManager {
         if (object === this.hover) {
             this.hover.onHover({ type: 'out' });
             this.hover = null;
-            Stage.css({ clearProps: 'cursor' });
+            Stage.css({ cursor: '' });
         }
 
         const index = this.meshes.indexOf(object.hitMesh);

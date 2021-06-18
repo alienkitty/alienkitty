@@ -1,10 +1,10 @@
 import { Mesh, OrthographicCamera, RGBFormat, Scene, Vector2, WebGLRenderTarget } from 'three';
 
-import { Flowmap, Stage } from 'alien.js';
-
 import { Config } from '../../config/Config.js';
+import { Flowmap } from '../../utils/world/Flowmap.js';
 import { WorldController } from './WorldController.js';
 import { CompositeMaterial } from '../../materials/CompositeMaterial.js';
+import { Stage } from '../Stage.js';
 
 export class RenderManager {
     static init(renderer, scene, camera) {
@@ -55,23 +55,21 @@ export class RenderManager {
     }
 
     static addListeners() {
-        Stage.element.addEventListener('touchstart', this.onTouchStart);
-        Stage.element.addEventListener('mousedown', this.onTouchStart);
-        window.addEventListener('touchmove', this.onTouchMove);
-        window.addEventListener('mousemove', this.onTouchMove);
+        Stage.element.addEventListener('pointerdown', this.onPointerDown);
+        window.addEventListener('pointermove', this.onPointerMove);
     }
 
     /**
      * Event handlers
      */
 
-    static onTouchStart = e => {
+    static onPointerDown = e => {
         e.preventDefault();
 
-        this.onTouchMove(e);
+        this.onPointerMove(e);
     };
 
-    static onTouchMove = e => {
+    static onPointerMove = e => {
         const event = {};
 
         if (e.changedTouches && e.changedTouches.length) {

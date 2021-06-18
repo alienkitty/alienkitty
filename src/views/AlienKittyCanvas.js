@@ -1,4 +1,10 @@
-import { Assets, Interface, Stage, clearTween, headsTails, radians, random, ticker, tween } from 'alien.js';
+import { Assets } from '../loaders/Assets.js';
+import { Interface } from '../utils/Interface.js';
+import { Stage } from '../controllers/Stage.js';
+
+import { ticker } from '../tween/Ticker.js';
+import { clearTween, tween } from '../tween/Tween.js';
+import { headsTails, radians, random } from '../utils/Utils.js';
 
 export class AlienKittyCanvas extends Interface {
     constructor() {

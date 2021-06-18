@@ -1,4 +1,4 @@
-import rgbshift from 'alien.js/src/shaders/modules/rgbshift/rgbshift.glsl.js';
+import rgbshift from './modules/rgbshift/rgbshift.glsl.js';
 
 export default /* glsl */`
 precision highp float;

@@ -1,13 +1,18 @@
 import { Color, OrthographicCamera, PlaneBufferGeometry, Scene, Uniform, Vector2, WebGL1Renderer } from 'three';
 
-import { Interface, TextGeometryLoader, TextureLoader, getFullscreenTriangle } from 'alien.js';
-
 import { Config } from '../../config/Config.js';
+import { TextureLoader } from '../../loaders/world/TextureLoader.js';
+import { TextGeometryLoader } from '../../loaders/world/TextGeometryLoader.js';
+import { Interface } from '../../utils/Interface.js';
+
+import { getFullscreenTriangle } from '../../utils/world/Utils3D.js';
 
 export class WorldController {
     static init() {
         this.initWorld();
         this.initLoaders();
+
+        this.addListeners();
     }
 
     static initWorld() {
@@ -40,9 +45,17 @@ export class WorldController {
         this.textGeometryLoader = new TextGeometryLoader();
     }
 
+    static addListeners() {
+        this.renderer.domElement.addEventListener('touchstart', this.onTouchStart);
+    }
+
     /**
      * Event handlers
      */
+
+    static onTouchStart = e => {
+        e.preventDefault();
+    };
 
     /**
      * Public methods

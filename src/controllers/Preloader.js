@@ -1,6 +1,9 @@
-import { AssetLoader, Assets, Device, FontLoader, MultiLoader } from 'alien.js';
-
 import { Config } from '../config/Config.js';
+import { Device } from '../config/Device.js';
+import { Assets } from '../loaders/Assets.js';
+import { FontLoader } from '../loaders/FontLoader.js';
+import { AssetLoader } from '../loaders/AssetLoader.js';
+import { MultiLoader } from '../loaders/MultiLoader.js';
 
 export class Preloader {
     static async init() {

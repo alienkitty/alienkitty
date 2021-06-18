@@ -1,9 +1,11 @@
-import { Events, Stage, ticker } from 'alien.js';
-
+import { Events } from '../config/Events.js';
 import { WorldController } from './world/WorldController.js';
 import { InputManager } from './world/InputManager.js';
 import { RenderManager } from './world/RenderManager.js';
+import { Stage } from './Stage.js';
 import { SceneView } from '../views/SceneView.js';
+
+import { ticker } from '../tween/Ticker.js';
 
 export class App {
     static async init(loader) {
