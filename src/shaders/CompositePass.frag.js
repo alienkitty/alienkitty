@@ -17,9 +17,9 @@ void main() {
 
     // Use flow to adjust the UV lookup of a texture
     vec2 uv = vUv;
-    uv += flow.rg * 0.05;
+    uv += flow.rg * -0.05;
 
-    float angle = length(vUv - vec2(0.5));
+    float angle = length(vUv - 0.5);
     float amount = length(flow.rg) * 0.025;
 
     gl_FragColor = getRGB(tScene, uv, angle, amount);
