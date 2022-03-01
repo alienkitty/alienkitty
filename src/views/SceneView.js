@@ -1,5 +1,6 @@
 import { Group } from 'three';
 
+import { InputManager } from '../controllers/world/InputManager.js';
 import { AlienKitty } from './AlienKitty.js';
 
 export class SceneView extends Group {
@@ -12,6 +13,14 @@ export class SceneView extends Group {
     initViews() {
         this.alienkitty = new AlienKitty();
         this.add(this.alienkitty);
+    }
+
+    addListeners() {
+        InputManager.add(this.alienkitty);
+    }
+
+    removeListeners() {
+        InputManager.remove(this.alienkitty);
     }
 
     /**
@@ -27,6 +36,7 @@ export class SceneView extends Group {
     };
 
     animateIn = () => {
+        this.addListeners();
         this.alienkitty.animateIn();
     };
 

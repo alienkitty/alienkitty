@@ -1,7 +1,6 @@
 import { Group, LinearFilter, Mesh, Texture } from 'three';
 
 import { WorldController } from '../controllers/world/WorldController.js';
-import { InputManager } from '../controllers/world/InputManager.js';
 import { BasicMaterial } from '../materials/BasicMaterial.js';
 import { TextMaterial } from '../materials/TextMaterial.js';
 import { AlienKittyCanvas } from './AlienKittyCanvas.js';
@@ -74,14 +73,6 @@ export class AlienKitty extends Group {
         this.hitMesh.scale.set(this.width, this.height + 10 + text.height, 1);
     }
 
-    addListeners() {
-        InputManager.add(this);
-    }
-
-    removeListeners() {
-        InputManager.remove(this);
-    }
-
     /**
      * Event handlers
      */
@@ -122,7 +113,6 @@ export class AlienKitty extends Group {
     };
 
     animateIn = () => {
-        this.addListeners();
         this.alienkitty.animateIn();
         this.texture.needsUpdate = true;
         this.visible = true;
