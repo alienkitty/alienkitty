@@ -69,16 +69,11 @@ export class RenderManager {
         this.onPointerMove(e);
     };
 
-    static onPointerMove = e => {
-        const event = {};
-
-        if (e.changedTouches && e.changedTouches.length) {
-            event.x = e.changedTouches[0].clientX;
-            event.y = e.changedTouches[0].clientY;
-        } else {
-            event.x = e.clientX;
-            event.y = e.clientY;
-        }
+    static onPointerMove = ({ clientX, clientY }) => {
+        const event = {
+            x: clientX,
+            y: clientY
+        };
 
         // Get mouse value in 0 to 1 range, with Y flipped
         this.mouse.set(

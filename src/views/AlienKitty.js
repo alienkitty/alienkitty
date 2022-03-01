@@ -1,7 +1,6 @@
 import { Group, LinearFilter, Mesh, Texture } from 'three';
 
 import { WorldController } from '../controllers/world/WorldController.js';
-import { InputManager } from '../controllers/world/InputManager.js';
 import { BasicMaterial } from '../materials/BasicMaterial.js';
 import { TextMaterial } from '../materials/TextMaterial.js';
 import { AlienKittyCanvas } from './AlienKittyCanvas.js';
@@ -35,14 +34,12 @@ export class AlienKitty extends Group {
         this.mesh = new Mesh(quad, this.material);
         this.mesh.frustumCulled = false;
         this.mesh.scale.set(this.width, this.height, 1);
-
         this.add(this.mesh);
 
         this.hitMesh = new Mesh(quad);
         this.hitMesh.frustumCulled = false;
         this.hitMesh.scale.set(this.width, this.height, 1);
         this.hitMesh.visible = false;
-
         this.add(this.hitMesh);
     }
 
@@ -67,19 +64,10 @@ export class AlienKitty extends Group {
         mesh.frustumCulled = false;
         mesh.position.x = Math.round((this.width - 48) / 2);
         mesh.position.y = -(this.height + 10);
-
         this.add(mesh);
 
         // Adjust height of hit mesh
         this.hitMesh.scale.set(this.width, this.height + 10 + text.height, 1);
-    }
-
-    addListeners() {
-        InputManager.add(this);
-    }
-
-    removeListeners() {
-        InputManager.remove(this);
     }
 
     /**
@@ -122,7 +110,6 @@ export class AlienKitty extends Group {
     };
 
     animateIn = () => {
-        this.addListeners();
         this.alienkitty.animateIn();
         this.texture.needsUpdate = true;
         this.visible = true;

@@ -97,7 +97,7 @@ export class WorldController {
 
     static animateIn = () => {
         this.element.tween({ opacity: 1 }, 250, 'easeOutSine', () => {
-            this.element.css({ clearProps: 'opacity' });
+            this.element.css({ opacity: '' });
         });
     };
 }

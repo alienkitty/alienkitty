@@ -56,17 +56,13 @@ export class App {
         const { width, height, dpr } = Stage;
 
         WorldController.resize(width, height, dpr);
-
         this.view.resize(width, height, dpr);
-
         RenderManager.resize(width, height, dpr);
     };
 
     static onUpdate = (time, delta, frame) => {
         WorldController.update(time, delta, frame);
-
         this.view.update(time, delta, frame);
-
         InputManager.update(time);
         RenderManager.update(time, delta, frame);
     };
