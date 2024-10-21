@@ -1,48 +1,33 @@
-html, body, #root {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
+:root {
+    --bg-color: #000;
+    --ui-color: #fff;
 }
 
-body {
-    margin: 0;
-    position: fixed;
-    font-family: 'Roboto Mono', monospace;
-    font-weight: 400;
-    font-size: 11px;
-    line-height: 1.7;
-    letter-spacing: 0.03em;
-    background: #000;
-    color: rgba(255, 255, 255, 0.94);
-}
-
-#root, #root * {
-    position: absolute;
-    outline: none;
-    border: none;
+*, :after, :before {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0;
     touch-action: none;
     -webkit-touch-callout: none;
     -webkit-user-drag: none;
-    -webkit-tap-highlight-color: transparent;
     -webkit-text-size-adjust: none;
     text-size-adjust: none;
 }
 
-#root br, #root span, #root a {
-    position: relative;
-    display: inline-block;
+*:focus {
+    outline: 0;
+    box-shadow: none;
 }
 
-a, a:hover, a:focus {
-    color: rgba(255, 255, 255, 0.94);
+html, body {
+    width: 100%;
+    height: 100%;
 }
 
-::selection {
-    background: #fff;
-    color: #000;
-}
-
-.preloader {
-    z-index: 100;
+body {
+    position: fixed;
+    background-color: var(--bg-color);
+    color: var(--ui-color);
+    -webkit-tap-highlight-color: transparent;
 }
