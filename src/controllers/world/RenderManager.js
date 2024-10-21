@@ -24,7 +24,7 @@ export class RenderManager {
     }
 
     static initRenderer() {
-        const { aspect, screenTriangle } = WorldController;
+        const { screenTriangle, aspect } = WorldController;
 
         // Fullscreen triangle
         this.screenScene = new Scene();
@@ -55,7 +55,7 @@ export class RenderManager {
     }
 
     static addListeners() {
-        Stage.element.addEventListener('pointerdown', this.onPointerDown);
+        window.addEventListener('pointerdown', this.onPointerDown);
         window.addEventListener('pointermove', this.onPointerMove);
     }
 
