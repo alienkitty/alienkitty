@@ -82,7 +82,7 @@ export class WorldController {
     };
 
     static animateIn = () => {
-        this.element.tween({ opacity: 1 }, 250, 'easeOutSine', () => {
+        this.element.tween({ opacity: 1 }, 1000, 'easeOutSine', () => {
             this.element.css({ opacity: '' });
         });
     };
