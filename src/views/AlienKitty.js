@@ -97,8 +97,9 @@ export class AlienKitty extends Group {
     // Public methods
 
     resize = (width, height, dpr) => {
+        // Y flipped
         this.position.x = (width - this.width) / 2;
-        this.position.y = -((height - this.height) / 2 - 65);
+        this.position.y = 1 - ((height - this.height) / 2 - 65);
 
         this.alienkitty.resize(width, height, dpr);
 
@@ -122,7 +123,7 @@ export class AlienKitty extends Group {
     };
 
     ready = () => Promise.all([
-        this.loadText(),
-        this.alienkitty.ready()
+        this.alienkitty.ready(),
+        this.loadText()
     ]);
 }
