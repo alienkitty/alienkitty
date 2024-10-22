@@ -1,13 +1,19 @@
-export class Config {
-    static BG_COLOR = '#000';
-    static UI_COLOR = 'rgba(255, 255, 255, 0.94)';
+export const isMobile = !!navigator.maxTouchPoints;
+export const isTablet = isMobile && Math.max(window.innerWidth, window.innerHeight) > 1000;
+export const isPhone = isMobile && !isTablet;
+export const isHighQuality = navigator.hardwareConcurrency > 4 || (!navigator.hardwareConcurrency && !isTablet);
+export const isOrbit = /[?&]orbit/.test(location.search);
+export const isDebug = /[?&]debug/.test(location.search);
 
-    static BREAKPOINT = 1000;
+export const basePath = '';
+export const assetPath = '/';
+export const breakpoint = 1000;
 
-    static ASSETS = [
-        'assets/images/alienkitty.svg',
-        'assets/images/alienkitty_eyelid.svg',
-        'assets/fonts/Roboto-Bold.png',
-        'assets/fonts/Roboto-Bold.json'
-    ];
-}
+export const layers = {
+};
+
+export const params = {
+};
+
+export const store = {
+};

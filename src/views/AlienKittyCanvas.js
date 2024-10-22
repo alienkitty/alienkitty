@@ -1,10 +1,6 @@
-import { Assets } from '../loaders/Assets.js';
-import { Interface } from '../utils/Interface.js';
-import { Stage } from '../controllers/Stage.js';
+import { Interface, clearTween, degToRad, delayedCall, headsTails, randInt, ticker, tween } from '@alienkitty/space.js/three';
 
-import { ticker } from '../tween/Ticker.js';
-import { clearTween, tween } from '../tween/Tween.js';
-import { headsTails, radians, random } from '../utils/Utils.js';
+import { WorldController } from '../controllers/world/WorldController.js';
 
 export class AlienKittyCanvas extends Interface {
     constructor() {
@@ -23,14 +19,16 @@ export class AlienKittyCanvas extends Interface {
     }
 
     async initImages() {
-        const img = await Promise.all([
-            Assets.loadImage('assets/images/alienkitty.svg'),
-            Assets.loadImage('assets/images/alienkitty_eyelid.svg')
+        const { loadImage } = WorldController;
+
+        const [alienkitty, eyelid] = await Promise.all([
+            loadImage('assets/images/alienkitty.svg'),
+            loadImage('assets/images/alienkitty_eyelid.svg')
         ]);
 
-        this.alienkitty = this.createCanvasObject(img[0], 90, 86);
-        this.eyelid1 = this.createCanvasObject(img[1], 24, 14, { pX: 0.5, x: 35, y: 25, scaleX: 1.5, scaleY: 0.01 });
-        this.eyelid2 = this.createCanvasObject(img[1], 24, 14, { x: 53, y: 26, scaleX: 1, scaleY: 0.01 });
+        this.alienkitty = this.createCanvasObject(alienkitty, 90, 86);
+        this.eyelid1 = this.createCanvasObject(eyelid, 24, 14, { pX: 0.5, x: 35, y: 25, scaleX: 1.5, scaleY: 0.01 });
+        this.eyelid2 = this.createCanvasObject(eyelid, 24, 14, { x: 53, y: 26, scaleX: 1, scaleY: 0.01 });
 
         this.isLoaded = true;
 
@@ -68,7 +66,7 @@ export class AlienKittyCanvas extends Interface {
 
         context.save();
         context.translate(object.x + object.pX, object.y + object.pY);
-        context.rotate(radians(object.rotation));
+        context.rotate(degToRad(object.rotation));
         context.scale(object.scaleX, object.scaleY);
         context.globalAlpha = object.opacity;
         context.drawImage(object.image, -object.pX, -object.pY, object.width, object.height);
@@ -84,12 +82,10 @@ export class AlienKittyCanvas extends Interface {
     }
 
     blink() {
-        this.delayedCall(random(0, 10000), headsTails(this.onBlink1, this.onBlink2));
+        this.timeout = delayedCall(randInt(0, 10000), headsTails(this.onBlink1, this.onBlink2));
     }
 
-    /**
-     * Event handlers
-     */
+    // Event handlers
 
     onUpdate = () => {
         if (this.needsUpdate) {
@@ -123,12 +119,10 @@ export class AlienKittyCanvas extends Interface {
         });
     };
 
-    /**
-     * Public methods
-     */
+    // Public methods
 
     resize = () => {
-        const { dpr } = Stage;
+        const dpr = window.devicePixelRatio;
 
         this.element.width = Math.round(this.width * dpr);
         this.element.height = Math.round(this.height * dpr);
@@ -160,6 +154,7 @@ export class AlienKittyCanvas extends Interface {
     destroy = () => {
         this.removeListeners();
 
+        clearTween(this.timeout);
         clearTween(this.eyelid1);
         clearTween(this.eyelid2);
 

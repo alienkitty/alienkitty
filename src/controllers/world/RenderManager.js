@@ -1,10 +1,10 @@
-import { Mesh, OrthographicCamera, RGBFormat, Scene, Vector2, WebGLRenderTarget } from 'three';
+import { Mesh, OrthographicCamera, Vector2, WebGLRenderTarget } from 'three';
+import { Flowmap } from '@alienkitty/alien.js/three';
 
-import { Config } from '../../config/Config.js';
-import { Flowmap } from '../../utils/world/Flowmap.js';
 import { WorldController } from './WorldController.js';
 import { CompositeMaterial } from '../../materials/CompositeMaterial.js';
-import { Stage } from '../Stage.js';
+
+import { breakpoint } from '../../config/Config.js';
 
 export class RenderManager {
     static init(renderer, scene, camera) {
@@ -12,9 +12,13 @@ export class RenderManager {
         this.scene = scene;
         this.camera = camera;
 
+        this.width = 1;
+        this.height = 1;
+
+        // Flowmap
         this.mouse = new Vector2(-1, -1);
         this.velocity = new Vector2();
-        this.lastTime = null;
+        this.lastTime = 0;
         this.lastMouse = new Vector2();
         this.multiplier = 1;
 
@@ -27,17 +31,12 @@ export class RenderManager {
         const { screenTriangle, aspect } = WorldController;
 
         // Fullscreen triangle
-        this.screenScene = new Scene();
         this.screenCamera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
-
         this.screen = new Mesh(screenTriangle);
         this.screen.frustumCulled = false;
-        this.screenScene.add(this.screen);
 
         // Render targets
-        this.renderTargetA = new WebGLRenderTarget(1, 1, {
-            format: RGBFormat,
-            anisotropy: 0,
+        this.renderTarget = new WebGLRenderTarget(1, 1, {
             depthBuffer: false
         });
 
@@ -55,19 +54,10 @@ export class RenderManager {
     }
 
     static addListeners() {
-        window.addEventListener('pointerdown', this.onPointerDown);
         window.addEventListener('pointermove', this.onPointerMove);
     }
 
-    /**
-     * Event handlers
-     */
-
-    static onPointerDown = e => {
-        e.preventDefault();
-
-        this.onPointerMove(e);
-    };
+    // Event handlers
 
     static onPointerMove = ({ clientX, clientY }) => {
         const event = {
@@ -81,7 +71,7 @@ export class RenderManager {
             1 - event.y / this.height
         );
 
-        // Calculate velocity
+        // First frame
         if (!this.lastTime) {
             this.lastTime = performance.now();
             this.lastMouse.copy(event);
@@ -98,6 +88,7 @@ export class RenderManager {
         const delta = Math.max(14, time - this.lastTime);
         this.lastTime = time;
 
+        // Calculate velocity
         this.velocity.x = (deltaX / delta) * this.multiplier;
         this.velocity.y = (deltaY / delta) * this.multiplier;
 
@@ -105,13 +96,17 @@ export class RenderManager {
         this.velocity.needsUpdate = true;
     };
 
-    /**
-     * Public methods
-     */
+    // Public methods
 
     static resize = (width, height, dpr) => {
         this.width = width;
         this.height = height;
+
+        if (width < breakpoint) {
+            this.multiplier = 2;
+        } else {
+            this.multiplier = 1;
+        }
 
         this.renderer.setPixelRatio(dpr);
         this.renderer.setSize(width, height);
@@ -119,13 +114,7 @@ export class RenderManager {
         width = Math.round(width * dpr);
         height = Math.round(height * dpr);
 
-        this.renderTargetA.setSize(width, height);
-
-        if (Stage.width < Config.BREAKPOINT) {
-            this.multiplier = 2;
-        } else {
-            this.multiplier = 1;
-        }
+        this.renderTarget.setSize(width, height);
     };
 
     static update = () => {
@@ -133,16 +122,13 @@ export class RenderManager {
         const scene = this.scene;
         const camera = this.camera;
 
-        const screenScene = this.screenScene;
-        const screenCamera = this.screenCamera;
-
-        const renderTargetA = this.renderTargetA;
+        const renderTarget = this.renderTarget;
 
         // Reset velocity when mouse not moving
         if (!this.velocity.needsUpdate) {
             this.mouse.set(-1, -1);
             this.velocity.set(0, 0);
-            this.lastTime = null;
+            this.lastTime = 0;
         }
         this.velocity.needsUpdate = false;
 
@@ -154,13 +140,13 @@ export class RenderManager {
         this.flowmap.update();
 
         // Scene pass
-        renderer.setRenderTarget(renderTargetA);
+        renderer.setRenderTarget(renderTarget);
         renderer.render(scene, camera);
 
         // Composite pass (render to screen)
-        this.compositeMaterial.uniforms.tScene.value = renderTargetA.texture;
+        this.compositeMaterial.uniforms.tScene.value = renderTarget.texture;
         this.screen.material = this.compositeMaterial;
         renderer.setRenderTarget(null);
-        renderer.render(screenScene, screenCamera);
+        renderer.render(this.screen, this.screenCamera);
     };
 }

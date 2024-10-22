@@ -16,16 +16,14 @@ export class SceneView extends Group {
     }
 
     addListeners() {
-        InputManager.add(this.alienkitty);
+        InputManager.add(this.alienkitty.hitMesh);
     }
 
     removeListeners() {
-        InputManager.remove(this.alienkitty);
+        InputManager.remove(this.alienkitty.hitMesh);
     }
 
-    /**
-     * Public methods
-     */
+    // Public methods
 
     resize = (width, height, dpr) => {
         this.alienkitty.resize(width, height, dpr);

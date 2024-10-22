@@ -1,33 +1,23 @@
-import { Config } from '../config/Config.js';
-import { Device } from '../config/Device.js';
-import { Assets } from '../loaders/Assets.js';
-import { FontLoader } from '../loaders/FontLoader.js';
-import { AssetLoader } from '../loaders/AssetLoader.js';
-import { MultiLoader } from '../loaders/MultiLoader.js';
+import { AssetLoader, Stage } from '@alienkitty/space.js/three';
 
 export class Preloader {
     static async init() {
-        if (!Device.webgl) {
-            return location.href = 'fallback.html';
-        }
-
-        Assets.path = Config.CDN;
-        Assets.crossOrigin = 'anonymous';
-
-        Assets.options = {
-            mode: 'cors',
-            // credentials: 'include'
-        };
-
-        // Assets.cache = true;
-
+        this.initStage();
         this.initLoader();
     }
 
+    static initStage() {
+        Stage.init();
+    }
+
     static async initLoader() {
-        this.loader = new MultiLoader();
-        this.loader.load(new FontLoader(['Roboto Mono']));
-        this.loader.load(new AssetLoader(Config.ASSETS));
+        this.loader = new AssetLoader();
+        this.loader.loadAll([
+            'assets/images/alienkitty.svg',
+            'assets/images/alienkitty_eyelid.svg',
+            'assets/fonts/Roboto-Bold.png',
+            'assets/fonts/Roboto-Bold.json'
+        ]);
 
         const { App } = await import('./App.js');
         this.app = App;
@@ -36,9 +26,7 @@ export class Preloader {
         this.onComplete();
     }
 
-    /**
-     * Event handlers
-     */
+    // Event handlers
 
     static onComplete = async () => {
         this.loader = this.loader.destroy();

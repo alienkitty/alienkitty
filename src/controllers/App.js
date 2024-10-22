@@ -1,11 +1,9 @@
-import { Events } from '../config/Events.js';
+import { Stage, ticker } from '@alienkitty/space.js/three';
+
 import { WorldController } from './world/WorldController.js';
 import { InputManager } from './world/InputManager.js';
 import { RenderManager } from './world/RenderManager.js';
-import { Stage } from './Stage.js';
 import { SceneView } from '../views/SceneView.js';
-
-import { ticker } from '../tween/Ticker.js';
 
 export class App {
     static async init(loader) {
@@ -20,14 +18,13 @@ export class App {
 
         await Promise.all([
             this.loader.ready(),
-            WorldController.textureLoader.ready(),
-            WorldController.textGeometryLoader.ready(),
+            WorldController.ready(),
             this.view.ready()
         ]);
     }
 
     static initWorld() {
-        WorldController.init();
+        WorldController.init(this.loader);
         Stage.add(WorldController.element);
     }
 
@@ -44,16 +41,16 @@ export class App {
     }
 
     static addListeners() {
-        Stage.events.on(Events.RESIZE, this.onResize);
+        window.addEventListener('resize', this.onResize);
         ticker.add(this.onUpdate);
     }
 
-    /**
-     * Event handlers
-     */
+    // Event handlers
 
     static onResize = () => {
-        const { width, height, dpr } = Stage;
+        const width = document.documentElement.clientWidth;
+        const height = document.documentElement.clientHeight;
+        const dpr = window.devicePixelRatio;
 
         WorldController.resize(width, height, dpr);
         this.view.resize(width, height, dpr);
@@ -67,9 +64,7 @@ export class App {
         RenderManager.update(time, delta, frame);
     };
 
-    /**
-     * Public methods
-     */
+    // Public methods
 
     static start = async () => {
         this.view.animateIn();
